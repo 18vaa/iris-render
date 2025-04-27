@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import logging
 
 # Load model
 model = joblib.load('iris_model.pkl')
@@ -22,3 +23,10 @@ prediction = model.predict(features)[0]
 # Class labels
 labels = {0: "Setosa", 1: "Versicolor", 2: "Virginica"}
 st.write(f"### Prediction: {labels[prediction]}")
+
+
+
+
+logging.basicConfig(filename="logs.txt", level=logging.INFO)
+logging.info(f"Input: {features.values.tolist()}, Prediction: {labels[prediction]}")
+
