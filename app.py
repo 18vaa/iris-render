@@ -1,11 +1,19 @@
-# app.py
 import streamlit as st
 import pandas as pd
-import joblib
+from sklearn.datasets import load_iris
+from sklearn.ensemble import RandomForestClassifier
 import logging
 
-# Load model
-model = joblib.load('iris_model.pkl')
+# Setup logging
+logging.basicConfig(filename="logs.txt", level=logging.INFO)
+
+# Load dataset and train model
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=iris.feature_names)
+y = pd.Series(iris.target)
+
+model = RandomForestClassifier()
+model.fit(X, y)
 
 st.title("🌸 Iris Flower Classifier")
 
@@ -17,16 +25,12 @@ petal_width = st.slider("Petal width (cm)", 0.1, 2.5, 0.2)
 
 # Predict
 features = pd.DataFrame([[sepal_length, sepal_width, petal_length, petal_width]],
-                        columns=['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'])
+                        columns=iris.feature_names)
 prediction = model.predict(features)[0]
 
 # Class labels
 labels = {0: "Setosa", 1: "Versicolor", 2: "Virginica"}
 st.write(f"### Prediction: {labels[prediction]}")
 
-
-
-
-logging.basicConfig(filename="logs.txt", level=logging.INFO)
+# Log prediction
 logging.info(f"Input: {features.values.tolist()}, Prediction: {labels[prediction]}")
-
